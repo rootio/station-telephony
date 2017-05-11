@@ -4,7 +4,7 @@
 
 __author__="HP Envy"
 __date__ ="$Nov 19, 2014 2:15:22 PM$"
-
+from memory_profiler import profile
 from freeswitchESL.ESL import *
 from rootio.config import *
 from rootio.telephony import *
@@ -17,6 +17,7 @@ from datetime import datetime
 
 class CallHandler:
     
+    @profile
     def __init__(self, radio_station, config={}):
         self.__radio_station = radio_station
         self.config = config
@@ -36,7 +37,8 @@ class CallHandler:
         
         #start listener for ESL events
         self.__start_ESL_listener()
-    
+
+    @profile 
     def __start_ESL_listener(self):
         t = threading.Thread(target=self.__listen_for_ESL_events, args=())
         t.daemon = True
@@ -168,12 +170,16 @@ class CallHandler:
     def speak(self, phrase, call_UUID):
         speak_command = 'speak stuff'
         return self.__do_ESL_command(speak_command) 
-        
+
+    @profile        
     def __listen_for_ESL_events(self):
         ESLConnection = self.create_esl()
         ESLConnection.events("plain", "all")
-        while 1:
+        i = 0
+        
+        while i < 4:
             e = ESLConnection.recvEvent()
+            i += 1
             if e:
                 event_json_string = e.serialize('json')
                 event_json = json.loads(event_json_string)

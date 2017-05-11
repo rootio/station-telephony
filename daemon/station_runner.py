@@ -43,6 +43,9 @@ class StationRunner(Daemon):
             t.start()
         print "================ service started at {0} ==============".format(datetime.utcnow())
 
+    def listen_schedule_updates(self):
+        pass
+
 
 
 if __name__ == "__main__":

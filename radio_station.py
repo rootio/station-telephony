@@ -5,6 +5,7 @@
 __author__="HP Envy"
 __date__ ="$Nov 19, 2014 1:50:35 PM$"
 
+from memory_profiler import profile
 from rootio.radio.models import Station
 from call_handler import CallHandler
 from program_handler import ProgramHandler
@@ -27,7 +28,8 @@ class RadioStation(Station):
         self.call_handler.stop()
         self.__program_handler.stop()
         pass
-    
+ 
+    @profile
     def __init__(self, station_id, db, logger):
         self.id = station_id
         self.logger = logger

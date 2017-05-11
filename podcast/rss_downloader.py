@@ -1,3 +1,4 @@
+from memory_profiler import profile
 import urllib
 import os
 import feedparser
@@ -29,11 +30,11 @@ class RSSDownloader():
 
 
     def __get_last_publish_date(self):
-        last_podcast = self.__db.query(ContentPodcastDownload).filter(ContentPodcastDownload.podcast_id == self.__podcast.id).order_by(desc(ContentPodcastDownload.date_created)).first()
-        if last_podcast != None:
-            return last_podcast.date_created
-        else: #default to last 1 week, in case of weeklies
-            return datetime.utcnow() + timedelta(days=-7)
+        #last_podcast = self.__db.query(ContentPodcastDownload).filter(ContentPodcastDownload.podcast_id == self.__podcast.id).order_by(desc(ContentPodcastDownload.date_created)).first()
+        #if last_podcast != None:
+         #   return last_podcast.date_created
+        #else: #default to last 1 week, in case of weeklies
+            return datetime.utcnow() + timedelta(days=-8)
     
     def __get_podcast_list(self, base_date):
         podcasts = []
@@ -49,8 +50,8 @@ class RSSDownloader():
                 os.makedirs(os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id)))
             for link in podcast.links:
                 if link.type == u'audio/mpeg':
-                    urllib.urlretrieve(link.href, os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id), podcast.title[0:50] + ".mp3"))
-                    self.__log_podcast_download(podcast.title, podcast.itunes_duration, podcast.title[0:50] + ".mp3", podcast.summary, datetime.fromtimestamp(mktime(podcast.published_parsed)))
+                    urllib.urlretrieve(link.href, os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id), podcast.title[0:50].replace("/","_") + ".mp3"))
+                    self.__log_podcast_download(podcast.title, podcast.itunes_duration, podcast.title[0:50].replace("/","_") + ".mp3", podcast.summary, datetime.fromtimestamp(mktime(podcast.published_parsed)))
         
 
     def __log_podcast_download(self, title, duration, file_name, summary, date_created):
