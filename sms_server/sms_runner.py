@@ -6,7 +6,6 @@ __author__="HP Envy"
 __date__ ="$Nov 19, 2014 4:16:15 PM$"
 
 import sys
-#sys.path.append('/home/amour/RootIO_Web_Old/'
 from rootio.config import *
 from rootio.radio.models import Station
 from call_handler import CallHandler
