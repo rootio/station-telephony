@@ -22,7 +22,6 @@ class RSSAgent:
     def run(self):
         print("running....")
         while True:
-            print "found podcasts " + str(len(self.__get_podcast_tracks()))
             for podcast_track in self.__get_podcast_tracks():
                 pd = RSSDownloader(podcast_track.id)
                 thr = threading.Thread(target=pd.download)
