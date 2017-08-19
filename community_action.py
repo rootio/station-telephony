@@ -46,7 +46,7 @@ class CommunityAction:
         self.__content = self.program.db.query(CommunityContent).filter(CommunityContent.type_code==self.__type_code).filter(CommunityContent.station_id ==self.program.radio_station.station.id).all()
 
     def __request_call(self):
-        return self.__call_handler.call(self, self.program.radio_station.station.transmitter_phone.number, 'play', self.__type_code, self.duration)
+        return self.__call_handler.call(self, self.program.radio_station.station.primary_transmitter_phone.number, 'play', self.__type_code, self.duration)
     
     def __play_media(self, call_info, idx): #play the media in the array
         self.__load_track()

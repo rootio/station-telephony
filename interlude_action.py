@@ -46,7 +46,7 @@ class InterludeAction:
         self.program.radio_station.logger.info("loaded media for {0} interlude action {1}".format(self.program.name, self.__media))
     
     def __request_call(self):
-        raw_result = self.__call_handler.call(self, self.program.radio_station.station.transmitter_phone.number,  'play', self.__argument, self.duration)
+        raw_result = self.__call_handler.call(self, self.program.radio_station.station.primary_transmitter_phone.number,  'play', self.__argument, self.duration)
 
     def __play_media(self,call_UUID, media_index):
         logical_index = media_index % len(self.__media)

@@ -63,7 +63,7 @@ class MediaAction:
         return count + 1    
 
     def __request_call(self):
-        return self.__call_handler.call(self, self.program.radio_station.station.transmitter_phone.number, 'play', self.__track_id, self.duration)
+        return self.__call_handler.call(self, self.program.radio_station.station.primary_transmitter_phone.number, 'play', self.__track_id, self.duration)
     
     def __play_media(self, call_info): #play the media in the array
         self.program.log_program_activity("Playing media {0}".format(self.__media.name))

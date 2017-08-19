@@ -32,7 +32,7 @@ class JingleAction:
         self.__play_jingle()
         
     def __request_call(self):
-        raw_result = self.__call_handler.call(self, self.program.radio_station.station.transmitter_phone.number,  'play', self.__argument, self.duration)
+        raw_result = self.__call_handler.call(self, self.program.radio_station.station.primary_transmitter_phone.number,  'play', self.__argument, self.duration)
         result = raw_result.split(" ")
         print "Result of call is " + str(result)
 
