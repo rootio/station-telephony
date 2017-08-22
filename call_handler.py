@@ -156,13 +156,13 @@ class CallHandler:
         self.__do_ESL_command(hangup_command) #possibly segfaults
            
     
-    def play(self, file_location, call_UUID):
-        play_command = 'uuid_displace {1} start \'{0}\''.format(call_UUID, file_location)
+    def play(self, call_UUID, file_location):
+        play_command = 'uuid_displace {0} start \'{1}\''.format(call_UUID, file_location.replace("'", r"\'")) 
         self.__radio_station.logger.info("Playing file {0} into call with UUID {1}".format(file_location, call_UUID))
         return self.__do_ESL_command(play_command)
     
     def stop_play(self, call_UUID, content_location):
-        stop_play_command = 'uuid_displace {0} stop \'{1}\''.format(call_UUID, content_location)
+        stop_play_command = 'uuid_displace {0} stop \'{1}\''.format(call_UUID, content_location.replace("'", r"\'"))
         return self.__do_ESL_command(stop_play_command)
 
     def speak(self, phrase, call_UUID):
