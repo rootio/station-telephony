@@ -29,9 +29,9 @@ class RSSDownloader():
 
 
     def __get_last_publish_date(self):
-        last_podcast = self.__db.query(ContentPodcastDownload).filter(ContentPodcastDownload.podcast_id == self.__podcast.id).order_by(desc(ContentPodcastDownload.date_created)).first()
+        last_podcast = self.__db.query(ContentPodcastDownload).filter(ContentPodcastDownload.podcast_id == self.__podcast.id).order_by(desc(ContentPodcastDownload.date_published)).first()
         if last_podcast != None:
-            return last_podcast.date_created
+            return last_podcast.date_published
         else: #default to last 1 week, in case of weeklies
             return datetime.utcnow() + timedelta(days=-7)
     
@@ -46,11 +46,19 @@ class RSSDownloader():
     def __download_podcasts(self, podcasts):
         for podcast in podcasts:
             if not os.path.exists(os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id))):
-                os.makedirs(os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id)))
+                try:
+                    os.makedirs(os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id)))
+                except Exception as e: #log this
+                    print e
+                    continue
             for link in podcast.links:
                 if link.type == u'audio/mpeg':
-                    urllib.urlretrieve(link.href, os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id), podcast.title[0:50] + ".mp3"))
-                    self.__log_podcast_download(podcast.title, podcast.itunes_duration, podcast.title[0:50] + ".mp3", podcast.summary, datetime.fromtimestamp(mktime(podcast.published_parsed)))
+                    try:
+                        urllib.urlretrieve(link.href, os.path.join(DefaultConfig.CONTENT_DIR, 'podcast', str(self.__podcast.id), podcast.title[0:50] + ".mp3"))
+                        self.__log_podcast_download(podcast.title, podcast.itunes_duration, podcast.title[0:50] + ".mp3", podcast.summary, datetime.fromtimestamp(mktime(podcast.published_parsed)))
+                    except Exception as e: #log this
+                        print e
+                        continue
         
 
     def __log_podcast_download(self, title, duration, file_name, summary, date_created):
@@ -60,8 +68,8 @@ class RSSDownloader():
         podcast_download.duration = duration
         podcast_download.file_name = file_name
         podcast_download.summary = summary
-        podcast_download.date_created = date_created
-        
+        podcast_download.date_published = date_created
+        podcast_download.date_downloaded = datetime.utcnow()       
         self.__db._model_changes = {}
         self.__db.add(podcast_download)
         self.__db.commit()

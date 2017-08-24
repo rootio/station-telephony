@@ -20,12 +20,13 @@ class RSSAgent:
         return session.query(ContentPodcast).all()
 
     def run(self):
-        print("running....")
         while True:
             for podcast_track in self.__get_podcast_tracks():
                 pd = RSSDownloader(podcast_track.id)
-                thr = threading.Thread(target=pd.download)
-                thr.daemon = True
-                thr.start()
+                pd.download() 
+                #Comment the line above and uncomment the 3 lines below to download in parallel. On a slow connection, the next iteration may begin before current downloads are done and logged, resulting in repetition, as well as choking the link
+                #thr = threading.Thread(target=pd.download)
+                #thr.daemon = True
+                #thr.start()
             sleep(300) #5 minutes
 
