@@ -62,14 +62,17 @@ class RSSDownloader():
         
 
     def __log_podcast_download(self, title, duration, file_name, summary, date_created):
-        podcast_download = ContentPodcastDownload()
-        podcast_download.name = title
-        podcast_download.podcast_id = self.__podcast.id
-        podcast_download.duration = duration
-        podcast_download.file_name = file_name
-        podcast_download.summary = summary
-        podcast_download.date_published = date_created
-        podcast_download.date_downloaded = datetime.utcnow()       
-        self.__db._model_changes = {}
-        self.__db.add(podcast_download)
-        self.__db.commit()
+        try:
+            podcast_download = ContentPodcastDownload()
+            podcast_download.name = title
+            podcast_download.podcast_id = self.__podcast.id
+            podcast_download.duration = duration
+            podcast_download.file_name = file_name
+            podcast_download.summary = summary
+            podcast_download.date_published = date_created
+            podcast_download.date_downloaded = datetime.utcnow()       
+            self.__db._model_changes = {}
+            self.__db.add(podcast_download)
+            self.__db.commit()
+        except Exception as e:
+            self.__db.rollback()
