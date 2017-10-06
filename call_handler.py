@@ -210,8 +210,8 @@ class CallHandler:
                         if loggable:
                             self.__log_call(event_json)            
        
-                    if event_json['Caller-Destination-Number'] in self.__media_playback_stop_recipients:
-                        del self.__media_playback_stop_recipients[event_json['Caller-Destination-Number']]
+                        if event_json['Caller-Destination-Number'] in self.__media_playback_stop_recipients:
+                            del self.__media_playback_stop_recipients[event_json['Caller-Destination-Number']]
               
                 elif event_name == "CHANNEL_PARK":
                     self.__radio_station.logger.info("Notifying recipient for {0} in {1} and {2}".format(event_json['Caller-Destination-Number'][-9:], self.__incoming_call_recipients, self.__host_call_recipients))
