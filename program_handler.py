@@ -83,10 +83,19 @@ class ProgramHandler:
         t.start()
 
     def __listen_for_scheduling_changes(self, ip, port):
-         time.sleep(3)
          sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
          addr = (ip, port)
-         sck.connect(addr)
+         
+         #It may not be possible to connect after restart, TIME_WAIT could come into play etc. Anyway, keep trying
+         connected = False
+         while not connected:
+             try:         
+                 sck.connect(addr)
+                 connected = True
+             except:
+                 self.__radio_station.logger.error("Could not connect to server, retrying in 30 ...")
+                 time.sleep(30)
+
          sck.send(json.dumps({'station':self.__radio_station.id, 'action':'register'}))
 
          while True:

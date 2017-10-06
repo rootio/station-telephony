@@ -20,6 +20,7 @@ from rootio.config import DefaultConfig
 
 from daemoner import Daemon
 from datetime import datetime
+import time
 import zmq
 import socket
 import json 
@@ -53,7 +54,16 @@ class StationRunner(Daemon):
     def __start_listener(self):
         self.__station_sockets = dict()
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind((DefaultConfig.SCHEDULE_EVENTS_SERVER_IP, DefaultConfig.SCHEDULE_EVENTS_SERVER_PORT))
+
+        #On restart, socket may be in TIME_WAIT, need to try multiple times to bind
+        bound = False
+        while not bound:
+            try:
+                s.bind((DefaultConfig.SCHEDULE_EVENTS_SERVER_IP, DefaultConfig.SCHEDULE_EVENTS_SERVER_PORT))
+                bound = True
+            except:
+                print self.__logger.error("Error on server bind, retrying. Retrying in 30 secs...")
+                time.sleep(30)
         s.listen(0)
         self.__logger.info("Started TCP listener on port {0}".format(DefaultConfig.SCHEDULE_EVENTS_SERVER_PORT))
 
