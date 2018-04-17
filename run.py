@@ -24,7 +24,13 @@ def run():
     radio_station.telephony_server = app
 
     stations = db.session.query(Station)
-    for station in stations.all():
+    stations = stations.all()
+
+    if not stations:
+        print "no stations, exiting"
+        sys.exit(1)
+
+    for station in stations:
         radio_station = radio_station.RadioStation(station.id, db.session, logger)
         logger.info('launching station : {0}'.format(station.id))
         t = threading.Thread(target=radio_station.run, args=())
