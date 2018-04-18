@@ -10,7 +10,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import threading
 import logging
-from logging.handlers import TimedRotatingFileHandler
 
 
 from radio_station import RadioStation
@@ -29,10 +28,6 @@ class StationRunner(Daemon):
 
     def run(self):
         self.__logger = logging.getLogger('station_runner')
-        hdlr = TimedRotatingFileHandler('/var/log/rootio/stations.log',when='midnight',interval=1)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr.setFormatter(formatter)
-        self.__logger.addHandler(hdlr)
         self.__logger.setLevel(logging.DEBUG)
 
         #set up scheduling 
@@ -80,6 +75,7 @@ class StationRunner(Daemon):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
     station_daemon = StationRunner("/tmp/station_runner.pid")
     if(len(sys.argv) == 2):
         if sys.argv[1] == "start":
