@@ -1,12 +1,14 @@
+import logging
 import smtplib
 from rootio.config import *
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+
 
 class RootIOMailMessage:
 
     def __init__(self):
-        self.__smtp_server = MAIL_SERVER
-        self.__smtp_username = MAIL_USERNAME
-        self.__smtp_password = MAIL_PASSWORD
         self.__message = ''
         self.__initialize_message()
         #print "mail server is {0}".format(MAIL_USERNAME)
@@ -34,13 +36,8 @@ class RootIOMailMessage:
         self.__body = "\n".join((self.__body, extra_body))
 
     def send_message(self):
-        smtp_server = smtplib.SMTP(self.__smtp_server)
-        smtp_server.starttls()
-        print ",".join(self.__to)
-        smtp_server.login(self.__smtp_username, self.__smtp_password)
-        smtp_server.sendmail(self.__from, self.__to, "\n\n".join((self.__subject,self.__body)))
-        smtp_server.quit()
-        return True
-
-
-
+        log.info("Send message")
+        log.info("from: %r", self.__from)
+        log.info("to: %r", self.__to)
+        log.info("subject: %r", self.__subject)
+        log.info("body: %r", self.__body)
