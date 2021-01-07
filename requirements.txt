@@ -38,7 +38,7 @@ isodate==0.5.0
 itsdangerous==0.23
 Jinja2==2.7.1
 jmespath==0.9.3
-lxml==4.2.1
+lxml==4.6.2
 Mako==0.8.1
 Markdown==2.4.1
 MarkupSafe==0.18
